@@ -1,0 +1,65 @@
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        if (s.size() < 2)
+        {
+            return 0;
+        }
+        stack<int> data;
+        int maxLen = 0;
+        for (size_t i = 0; i < s.size(); ++i)
+        {
+            if (s[i] == '(')//左括号入栈
+            {
+                data.push(-1);
+            }
+            else
+            {
+                int tmp = 0;
+                bool bFind = false;
+                while (!data.empty())
+                {
+                    if (data.top() == -1) //找到左括号就结束
+                    {
+                        tmp += 2;
+                        data.pop();
+                        bFind = true;
+                        break;
+                    }
+                    else if (data.top() == -2)
+                    {
+                        break;
+                    }
+                    else//把括号中间的数字加起来
+                    {
+                        tmp += data.top();
+                        data.pop();
+                    }
+                }
+                if (!bFind)//没有匹配的情况下，把右括号入栈
+                {
+                    data.push(-2);
+                    continue;
+                }
+                while(!data.empty())//把本次匹配前面的数据加起来
+                {
+                    if (data.top() != -1 && data.top() != -2)
+                    {
+                        tmp += data.top();
+                        data.pop();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if (tmp > 0)
+                {
+                    data.push(tmp);
+                }
+                maxLen = max(maxLen, tmp);
+            }
+        }
+        return maxLen;
+    }
+};
